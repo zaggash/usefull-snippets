@@ -1,3 +1,7 @@
+# Kubernetes 
+
+## Kubectl CheatSheet  
+
 ### List ALL ressources from a namespace  
 ```bash
 kubectl api-resources --verbs=list --namespaced -o name \
@@ -14,26 +18,23 @@ kubectl -n <NAMESPACE> get secrets <SECRET> -o json | jq '.data | map_values(@ba
 kubectl -n <NAMESPACE> get events --sort-by='.metadata.creationTimestamp'  
 ```  
 
+## Etcd CheatSheet
+
 ### List ETCD Keys  
 ```bash
 docker exec -ti etcd etcdctl get / --prefix --keys-only  
 ```  
 
-### LSOF show listening TCP sockets  
-```bash
-lsof -nP -iTCP -sTCP:LISTEN  
-```  
-
-
-### Extract Kube-API Heap  
-Edit the cluster kube-serverapi config file to enable the profiling.  
+## Extract Kube-API Heap
+### 1. Edit ApiServer config
+Edit the cluster kube-serverapi config file to enable the profiling.
 ```yaml
 kubeApi:
   extraArgs:
     profiling: "true"
-```  
+```
 
-### Get kubeconfig file from controlplane node  
+### 2. Get kubeconfig file from controlplane node
 ```bash
 docker run --rm --net=host \
   -v $(docker inspect kubelet \
@@ -48,18 +49,27 @@ docker run --rm --net=host \
   > kubeconfig_admin.yaml
 ```
 
-### Extract certificate from the above generated kubeconfig file
+### 3. Extract certificate from the above generated kubeconfig file
 ```bash
 echo -n $(cat kubeconfig_admin.yaml | grep client-certificate-data | awk '{print $2}') | base64 -d > cert.pem
 echo -n $(cat kubeconfig_admin.yaml | grep client-key-data | awk '{print $2}') | base64 -d > key.pem
 ```
 
-### Extract Heap file
+### 4. Extract Heap file
 ```bash
 curl -k --cacert /etc/kubernetes/ssl/kube-ca.pem --key key.pem --cert cert.pem https://localhost:6443/debug/pprof/heap -o heap
 ```  
 
-### Test SSL Encryption
+# Linux/Bash  
+
+## Networking  
+
+### LSOF show listening TCP sockets  
+```bash
+lsof -nP -iTCP -sTCP:LISTEN  
+```  
+
+### Test SSL Encryption  
 ```bash
 docker run --rm -ti  drwetter/testssl.sh <domain.org>:<sslPort>
-```
+```  
