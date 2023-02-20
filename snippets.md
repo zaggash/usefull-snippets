@@ -15,7 +15,7 @@ kubectl -n <NAMESPACE> get secrets <SECRET> -o json | jq '.data | map_values(@ba
 
 ### Order kube events by date  
 ```bash
-kubectl -n <NAMESPACE> get events --sort-by='.metadata.creationTimestamp'  
+kubectl -n <NAMESPACE> get events --sort-by='.lastTimestamp'  
 ```  
 
 ## Etcd CheatSheet
