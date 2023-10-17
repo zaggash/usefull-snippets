@@ -99,7 +99,22 @@ echo -n $(cat kubeconfig_admin.yaml | grep client-key-data | awk '{print $2}') |
 curl -k --cacert /etc/kubernetes/ssl/kube-ca.pem --key key.pem --cert cert.pem https://localhost:6443/debug/pprof/heap -o heap
 ```  
 
-
+## Extract Rancher Heap Dump
+```
+for time in {1..5}
+do
+  for pod in $(kubectl -n cattle-system get pods --no-headers -l app=rancher | cut -d ' ' -f1)
+  do
+    echo "Getting heap-$time for $pod"
+    kubectl -n cattle-system exec "$pod" -c rancher -- curl -s http://localhost:6060/debug/pprof/heap -o heap;
+    kubectl -n cattle-system cp "$pod":heap -c rancher "$pod-heap-$time";
+    echo "Saved heap $pod-heap-$time"
+  done
+  sleep 3
+done
+echo ".........."
+echo "[FINISHED]"
+```
 
 # Linux/Bash  
 
