@@ -1,0 +1,5 @@
+### Build image locally
+`docker build -t graphiz:local  https://raw.githubusercontent.com/zaggash/usefull-snippets/main/pprof_graphviz/Dockerfile`
+
+### Run it
+`docker run -ti -v "$pwd":/opt graphiz:local`
