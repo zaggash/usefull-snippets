@@ -3,3 +3,8 @@ docker build -t graphiz:local  https://raw.githubusercontent.com/zaggash/usefull
 
 ### Run it
 docker run -ti -v "$(pwd):/opt" -p 8080:8080 graphiz:local
+
+### Execute it
+socat TCP-LISTEN:8080,fork TCP4:127.0.0.1:8000
+cd /opt
+go tool pprof -http=:8000 <pprof_binary>
