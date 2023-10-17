@@ -4,7 +4,7 @@ RUN \
     graphviz \
     git \
     bash \
-  && go get -u github.com/google/pprof 
+  && go install github.com/google/pprof@latest
 
 WORKDIR $GOPATH/bin
 ENTRYPOINT /bin/bash
